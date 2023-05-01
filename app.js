@@ -86,7 +86,7 @@ const contenedor = document.querySelector("#contenedor") //Traemos el contenedor
 
 //Con el metodo forEach extraemos los datos del arreglo de manera individual, para posteriormente imprimirlos en el html del "contenedor"...
 stockProductos.forEach(prod => {
-    const {id,nombre,precio,desc,img,cantidad} = prod  //Manera practica de extraer los datos que necesitamos del arreglo...
+    const {id,nombre,precio,desc,img,cantidad} = prod  //Manera practica de extraer los datos que necesitamos del arreglo...(desestructuracion)
 
     //card traida de bootstrap...
     contenedor.innerHTML += `
@@ -106,10 +106,36 @@ stockProductos.forEach(prod => {
 
 let carrito = [] // Array para guardar elementos agregados al carrito...
 
-function agregarProducto(id){ //Recibe como parametro el "id" anterior...
+function agregarProducto(id){ //Funcion para agregar los elementos al carrito,Recibe como parametro el "id" anterior...
     const item = stockProductos.find(prod => prod.id === id) //Metodo find busca SI el id empareja...Extrae todo el objeto...
     carrito.push(item) // Si coinciden los Ids, se le agrega el "item" al carrito, que en si, inserta TODO los datos correspondientes al id...
     console.log(carrito)
     console.log(item)
+    showElementsCart()
+}
+
+const showElementsCart = () => {  //Funcion para imprimir los items agregados al carrito en la ventana Modal...
+    const modalCartBody = document.querySelector(".modal .modal-body")  //Donde insertaremos los items agregados al "carrito"...
+
+    carrito.forEach(prod => { //Aqui se imprimen los items que contenga el "carrito"
+        const {id,nombre,img,desc,cantidad,precio} = prod //Desestructuracion...
+        modalCartBody.innerHTML += 
+        //Cada vez que el ciclo itera agrega cada elemento que contenga "carrito", gracias al "+="
+        `
+        <div class="modal-contenedor">
+        <div>
+        <img class="img-fluid img-carrito" src="${img}"/>
+        </div>
+
+        <div>
+        <p>Producto: ${nombre}</p>
+        <p>Precio: ${precio}</p>
+        <p>Cantidad: ${cantidad}</p>
+        
+        <button class="btn btn-danger">Eliminar Producto</button>
+        </div>
+        `
+        //Creamos la estructura HTML, imprimira los datos obtenidos del array "carrito"
+    })
     
 }
