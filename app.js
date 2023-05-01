@@ -101,8 +101,15 @@ stockProductos.forEach(prod => {
   </div>
 </div>
     `
+    //Se agrega onclick "Agregar carrito" para ejecutar funcion agregarProducto(), enviando como parametro su id correspondiente...
 })
 
+let carrito = [] // Array para guardar elementos agregados al carrito...
+
 function agregarProducto(id){ //Recibe como parametro el "id" anterior...
-    console.log(id)
+    const item = stockProductos.find(prod => prod.id === id) //Metodo find busca SI el id empareja...Extrae todo el objeto...
+    carrito.push(item) // Si coinciden los Ids, se le agrega el "item" al carrito, que en si, inserta TODO los datos correspondientes al id...
+    console.log(carrito)
+    console.log(item)
+    
 }
