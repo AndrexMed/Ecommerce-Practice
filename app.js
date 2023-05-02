@@ -83,6 +83,14 @@ const stockProductos = [
 ];
 
 const contenedor = document.querySelector("#contenedor") //Traemos el contenedor del html....
+const carritoContenedor = document.querySelector("#carritoContenedor")
+const clearCart = document.querySelector("#vaciarCarrito") //Llamado al boton "vaciarCarrito"
+
+//Funcion que se ejecuta cuando se carga el documento, encargada de almacenar los datos en el local...
+document.addEventListener("DOMContentLoaded", () => {
+  carrito = JSON.parse(localStorage.getItem("carrito")) || []
+  showElementsCart()//Cada vez que se agregue o elimine un item al llamar esta funcion "pinta" o actuliza los items
+})
 
 //Con el metodo forEach extraemos los datos del arreglo de manera individual, para posteriormente imprimirlos en el html del "contenedor"...
 stockProductos.forEach(prod => {
@@ -102,6 +110,12 @@ stockProductos.forEach(prod => {
 </div>
     `
     //Se agrega onclick "Agregar carrito" para ejecutar funcion agregarProducto(), enviando como parametro su id correspondiente...
+})
+
+//Funcion anonima para vaciar el carrito...
+clearCart.addEventListener("click", () => {
+  carrito = [] // Cuando le den click el carrito se le asigna un valor vacio...
+  showElementsCart(); //Cada vez que se agregue o elimine un item al llamar esta funcion "pinta" o actuliza los items
 })
 
 let carrito = [] // Array para guardar elementos agregados al carrito...
@@ -153,8 +167,7 @@ const showElementsCart = () => { // Funcion para "Pintar" los items en el modal 
         0
       );
     }
-  
-    // guardarStorage();
+    saveStorage(); //llamado a la funcion que almacena los datos en cache....
   };
 
 function deleteProduct(idEntrance) { //Funcion para eliminar item, que recibe el parametro "id", enviado desde el boton "Eliminar producto"
@@ -165,3 +178,8 @@ function deleteProduct(idEntrance) { //Funcion para eliminar item, que recibe el
     console.log("Carrito actualizado: ", carrito)
     showElementsCart(); //Cada vez que se agregue o elimine un item al llamar esta funcion "pinta" o actuliza los items
 }
+
+function saveStorage(){ // Funcion para almacenar los datos en el localhost, y no se pierdan en el recargo de la pagina...
+  localStorage.setItem("carrito", JSON.stringify(carrito))
+}
+
