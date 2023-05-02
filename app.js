@@ -82,10 +82,12 @@ const stockProductos = [
   },
 ];
 
+//Pasando elementos HTML a JS, para manipularlos...
 const contenedor = document.querySelector("#contenedor") //Traemos el contenedor del html....
 const carritoContenedor = document.querySelector("#carritoContenedor")
 const clearCart = document.querySelector("#vaciarCarrito") //Llamado al boton "vaciarCarrito"
 const precioTotal = document.querySelector("#precioTotal")
+const procesarCompra = document.querySelector("#procesarCompra")
 
 //Funcion que se ejecuta cuando se carga el documento, encargada de almacenar los datos en el local...
 document.addEventListener("DOMContentLoaded", () => {
@@ -97,7 +99,7 @@ document.addEventListener("DOMContentLoaded", () => {
 stockProductos.forEach(prod => {
   const { id, nombre, precio, desc, img, cantidad } = prod  //Manera practica de extraer los datos que necesitamos del arreglo...(desestructuracion)
 
-  //card traida de bootstrap...
+  //card traida de bootstrap...con el operador += le vamos insetando cada item en cada iteracion...
   contenedor.innerHTML += `
     <div class="card" style="width: 18rem;">
   <img class="card-img-top mt-2" src="${img}" alt="Card image cap">
@@ -113,6 +115,19 @@ stockProductos.forEach(prod => {
   //Se agrega onclick "Agregar carrito" para ejecutar funcion agregarProducto(), enviando como parametro su id correspondiente...
 })
 
+procesarCompra.addEventListener("click", () => {
+  if (carrito.length === 0) { //Si el carrito esta vacio muestra esta alerta(modal) insertada con bootstrap...
+    Swal.fire({ //Alerta de error
+      title: "Tu carrito esta vacio!",
+      text: "Compra algo para continuar con la compra",
+      icon: "error",
+      confirmButtonText: "Aceptar"
+    }) 
+  }else{
+    location.href = "compra.html"
+  }
+})
+
 //Funcion anonima para vaciar el carrito...
 clearCart.addEventListener("click", () => {
   carrito = [] // Cuando le den click el carrito se le asigna un valor vacio...
@@ -121,18 +136,18 @@ clearCart.addEventListener("click", () => {
 
 let carrito = [] // Array para guardar elementos agregados al carrito...
 
-
 function addProduct(idEntrance) { //Funcion para agregar los elementos al carrito,Recibe como parametro el "id" anterior...
  
-  const alreadyExists = carrito.some(item => item.id === idEntrance) //El metodo some busca si un item existe o no...lo almacenamos...
+  //Comprobamos si un item ya esta agregado para aumentarle la cantidad...
+  const alreadyExists = carrito.some(item => item.id === idEntrance) //El metodo some busca si un item existe o no...
 
-  if (alreadyExists) { //SI Existe en el array "carrito":
-    const prod = carrito.map(item => { //Transformamos el arreglo con map.
+  if (alreadyExists) { //SI esta agregadp en el array "carrito":
+    const prod = carrito.map(item => { //Mapeamos el array "carrito", para transformar un nuevo valor "cantidad"
       if(item.id === idEntrance){ //Relacionamos los ids
         item.cantidad++ //Le incrementamos la cantidad...
       }
     })
-  }else{
+  }else{ //SINO esta almacenado en el array "carrito"
       const item = stockProductos.find(prod => prod.id === idEntrance) //Metodo find busca SI el id empareja...Extrae todo el objeto...
       carrito.push(item) // Si coinciden los Ids, se le agrega el "item" al carrito, que en si, inserta TODO los datos correspondientes al id...
       console.log("Items en el carrito: ", carrito) //Imprimiendo los elementos que contenga el array "carrito, asi este vacio"
@@ -161,6 +176,7 @@ const showElementsCart = () => { // Funcion para "Pintar" los items en el modal 
           </div>
         </div>
         `
+        //Se agrega funcion deleteProduct al boton al hacer click...
     })
   }
 
