@@ -1,3 +1,9 @@
+body{
+    overflow-x: hidden;
+}
+a{
+    cursor: pointer;
+}
 .modal-contenedor{
     display: flex;
     align-items: center;
@@ -6,4 +12,11 @@
 .img-carrito{
     width: 200px;
     padding: 20px;
+}
+.modal-content{
+    background-color: #E3D8D6;
+}
+.parrafo{
+    font-weight: 700;
+    font-style: italic;
 }
