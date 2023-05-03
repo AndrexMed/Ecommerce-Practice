@@ -81,6 +81,7 @@ const stockProductos = [
     img: "img/fornite.jpg",
   },
 ];
+let carrito = [] // Array para guardar elementos agregados al carrito...
 
 //Pasando elementos HTML a JS, para manipularlos...
 const contenedor = document.querySelector("#contenedor") //Traemos el contenedor del html....
@@ -88,17 +89,51 @@ const carritoContenedor = document.querySelector("#carritoContenedor")
 const clearCart = document.querySelector("#vaciarCarrito") //Llamado al boton "vaciarCarrito"
 const precioTotal = document.querySelector("#precioTotal")
 const procesarCompra = document.querySelector("#procesarCompra")
+const activarFuncion = document.querySelector("#activarFuncion")
+const totalProceso = document.querySelector("#totalProceso");
+
+if(activarFuncion){
+  // activarFuncion.onclick = procesarPedido
+  activarFuncion.addEventListener("click", procesarPedido) //Correcion de error
+}
 
 //Funcion que se ejecuta cuando se carga el documento, encargada de almacenar los datos en el local...
 document.addEventListener("DOMContentLoaded", () => {
   carrito = JSON.parse(localStorage.getItem("carrito")) || []
+
   showElementsCart()//Cada vez que se agregue o elimine un item al llamar esta funcion "pinta" o actuliza los items
+  // procesarPedido()
+  // document.querySelector("#activarFuncion").click(procesarPedido);
+});
+
+if (clearCart) {
+  //Funcion anonima para vaciar el carrito...
+  clearCart.addEventListener("click", () => {
+    carrito = [] // Cuando le den click el carrito se le asigna un valor vacio...
+    showElementsCart(); //Cada vez que se agregue o elimine un item al llamar esta funcion "pinta" o actuliza los items
+  })
+  }
+
+if (procesarCompra) {
+procesarCompra.addEventListener("click", () => {
+  if (carrito.length === 0) { //Si el carrito esta vacio muestra esta alerta(modal) insertada con bootstrap...
+    Swal.fire({ //Alerta de error
+      title: "Tu carrito esta vacio!",
+      text: "Compra algo para continuar con la compra",
+      icon: "error",
+      confirmButtonText: "Aceptar"
+    }) 
+  }else{
+    location.href = "compra.html"
+  }
 })
+}
 
 //Con el metodo forEach extraemos los datos del arreglo de manera individual, para posteriormente imprimirlos en el html del "contenedor"...
 stockProductos.forEach(prod => {
   const { id, nombre, precio, desc, img, cantidad } = prod  //Manera practica de extraer los datos que necesitamos del arreglo...(desestructuracion)
 
+  if (contenedor) {
   //card traida de bootstrap...con el operador += le vamos insetando cada item en cada iteracion...
   contenedor.innerHTML += `
     <div class="card" style="width: 18rem;">
@@ -113,28 +148,7 @@ stockProductos.forEach(prod => {
 </div>
     `
   //Se agrega onclick "Agregar carrito" para ejecutar funcion agregarProducto(), enviando como parametro su id correspondiente...
-})
-
-procesarCompra.addEventListener("click", () => {
-  if (carrito.length === 0) { //Si el carrito esta vacio muestra esta alerta(modal) insertada con bootstrap...
-    Swal.fire({ //Alerta de error
-      title: "Tu carrito esta vacio!",
-      text: "Compra algo para continuar con la compra",
-      icon: "error",
-      confirmButtonText: "Aceptar"
-    }) 
-  }else{
-    location.href = "compra.html"
-  }
-})
-
-//Funcion anonima para vaciar el carrito...
-clearCart.addEventListener("click", () => {
-  carrito = [] // Cuando le den click el carrito se le asigna un valor vacio...
-  showElementsCart(); //Cada vez que se agregue o elimine un item al llamar esta funcion "pinta" o actuliza los items
-})
-
-let carrito = [] // Array para guardar elementos agregados al carrito...
+}})
 
 function addProduct(idEntrance) { //Funcion para agregar los elementos al carrito,Recibe como parametro el "id" anterior...
  
@@ -192,11 +206,10 @@ const showElementsCart = () => { // Funcion para "Pintar" los items en el modal 
   if (precioTotal) { //Funcion para realizar el calculo del precio total...
     precioTotal.innerText = carrito.reduce( //El metodo reduce toma todos los valores de un array los reduce a uno...
       (acumulador, item) => acumulador + item.cantidad * item.precio,
-      0
-    );
+      0)
   }
   saveStorage(); //llamado a la funcion que almacena los datos en cache....
-};
+}
 
 function deleteProduct(idEntrance) { //Funcion para eliminar item, que recibe el parametro "id", enviado desde el boton "Eliminar producto"
   console.log("Eliminando item: ", idEntrance)
@@ -211,3 +224,48 @@ function saveStorage() { // Funcion para almacenar los datos en el localhost, y 
   localStorage.setItem("carrito", JSON.stringify(carrito))
 }
 
+// function procesarPedido(){
+// alert("Hello")
+//   carrito.forEach(item => {
+//     const listaCompra = document.querySelector("#lista-compra tbody")
+//     const {id, nombre, precio, img, cantidad} = item
+//     if(listaCompra){
+//     const row = document.createElement("tr")
+//     row.innerHTML += `
+//     <td>
+//     <img class="img-fluid img-carrito" src="${img}"/>
+//     </td>
+//     <td>${nombre}</td>
+//     <td>${precio}</td>
+//     <td>${cantidad}</td>
+//     <td>${precio * cantidad}</td>
+//     `
+//     listaCompra.appendChild(row)
+//   }})
+// }
+function procesarPedido() {
+  alert("Hello")
+  console.log("salio")
+  carrito.forEach((prod) => {
+    const listaCompra = document.querySelector("#lista-compra tbody");
+    const { id, nombre, precio, img, cantidad } = prod;
+    if (listaCompra) {
+      const row = document.createElement("tr");
+      row.innerHTML += `
+              <td>
+              <img class="img-fluid img-carrito" src="${img}"/>
+              </td>
+              <td>${nombre}</td>
+            <td>${precio}</td>
+            <td>${cantidad}</td>
+            <td>${precio * cantidad}</td>
+            `;
+      listaCompra.appendChild(row);
+    }
+  });
+  totalProceso.innerText = carrito.reduce(
+    (acc, prod) => acc + prod.cantidad * prod.precio,
+    0
+  );
+ 
+}
