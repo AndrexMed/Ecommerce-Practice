@@ -20,3 +20,9 @@ a{
     font-weight: 700;
     font-style: italic;
 }
+#activarFuncion{
+    opacity: 0;
+}
+.alerta{
+    font-weight: 900;
+}
