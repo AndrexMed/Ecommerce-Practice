@@ -1,0 +1,3 @@
+# Ecommerce-Practice
+Ejercicio realizado con el fin de practicar la manipulación del DOM, elaborando un Ecommerce básico pero con muchas funcionalidades e aplicación de métodos y arreglos intermedios....
+https://andrexmed.github.io/Ecommerce-Practice/
